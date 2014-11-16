@@ -9,9 +9,8 @@ import org.apache.log4j.Logger;
 
 import main.result.Result;
 import main.search.Searcher;
-import main.search.SearcherByBruteForce;
-import main.search.SearcherByDataStructure;
-import main.search.SearcherByRegex;
+import main.search.Searcher.SearchMethod;
+import main.search.SearcherFactory;
 
 public class Executor {
 
@@ -23,7 +22,7 @@ public class Executor {
 		logger.info("In executor's main");
 
 		String tokenString = null;
-		String methodType = null;
+		int option = 0;
 
 		// read the token string from the command-line;
 		try {
@@ -34,20 +33,32 @@ public class Executor {
 			}
 			logger.info("User entered search token: " + tokenString);
 			System.out.println("Enter 1 for regex search or 2 for data-structure based search."
-							+ "\nEnter for default brute force search");
-			methodType = br.readLine();
-			Searcher searcher = null;
-			if (methodType.equals("1")) {
-				logger.info("User wants to search using regex");
-				searcher = new SearcherByRegex();
-			} else if (methodType.equals("2")) {
-				logger.info("User wants to search using datastructure");
-				searcher = new SearcherByDataStructure();
-			} else {
-				// user wants to perform default brute force based search
-				logger.info("User wants to search using brute force");
-				searcher = new SearcherByBruteForce();
+					+ "\nEnter for default brute force search");
+			String userOption = br.readLine();
+			if (userOption.isEmpty()){
+				option = 0;
+			}else {
+				option = Integer.parseInt(userOption);
 			}
+			Searcher searcher = null;
+			String methodType = null;
+			switch(option){
+			case 1:{
+				methodType = SearchMethod.REGEX.toString();
+				logger.info("User wants to search using regex");
+				break;
+			}
+			case 2:{
+				methodType = SearchMethod.DATASTRUCTURE.toString();
+				logger.info("User wants to search using datastructure");
+				break;
+			}
+			default:{
+				methodType = SearchMethod.BRUTEFORCE.toString();
+				logger.info("User wants to search using brute force");
+			}
+			}
+			searcher = SearcherFactory.getSearcher(methodType);
 			List<Result> resultSet = searcher.search(tokenString);
 			for (Result rs : resultSet) {
 				System.out.println("For file: " + rs.getFilename()
