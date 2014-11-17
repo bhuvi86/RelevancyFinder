@@ -12,6 +12,10 @@ import main.result.sort.ResultComparator;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Search by brute force method.
+ *
+ */
 public class SearcherByBruteForce implements Searcher{
 	
 	//protected constructor so that only factory or subclass can call
@@ -20,6 +24,12 @@ public class SearcherByBruteForce implements Searcher{
 
 	private static Logger logger = Logger.getLogger("SearcherByBruteForce");
 
+	/**
+	 * Read every input file by line and find if given search token is present in the file.
+     * If more than one occurrence, increment frequency.
+     * @return List<Result> with filename and number of occurrences.
+	 */
+	@Override
 	public List<Result> search(String tokenString) throws Exception {
 		if ( tokenString == null || tokenString.isEmpty()){
 			return null;
@@ -38,18 +48,23 @@ public class SearcherByBruteForce implements Searcher{
 				int count = 0;
 				int idx = 0;
 				while ((idx = line.toLowerCase().indexOf(strSearch, idx)) != -1) {
-					count++;
+					// check if next char is not alphabet
+					// to avoid matching 'there' when querying for 'the'
+					char nextChar = line.charAt(idx+strSearch.length());
+					if( !Character.isAlphabetic(nextChar)) {
+						count++;
+					}
 					idx += strSearch.length();
 				}
 				frequency += count;
 
 			}
-			// TODO: add in sorted order by frequency
 			list.add(new Result(textFile.getName(), frequency));
 			br.close();
 		}
 		// return results in order of relevancy (most-relevant on top)
 		Collections.sort(list, new ResultComparator());
+		logger.info("Search done.");
 		return list;
 	}
 }

@@ -14,6 +14,9 @@ import org.apache.log4j.Logger;
 import main.result.Result;
 import main.result.sort.ResultComparator;
 
+/**
+ * Search for token string using Java REGEX API.
+ */
 public class SearcherByRegex implements Searcher {
 
 	//protected constructor so that only factory or subclass can call
@@ -21,6 +24,11 @@ public class SearcherByRegex implements Searcher {
 	}
 
 	private static Logger logger = Logger.getLogger("SearcherByRegex");
+	
+	/**
+	 * Search for string using REGEX API.
+	 * @return List<Result> with filename and number of occurrences.
+	 */
 	@Override
 	public List<Result> search(String searchToken) throws Exception {
 		if (searchToken == null || searchToken.isEmpty()){

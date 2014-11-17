@@ -12,6 +12,12 @@ import main.search.Searcher;
 import main.search.Searcher.SearchMethod;
 import main.search.SearcherFactory;
 
+/**
+ * Class that interacts with user. reads user option for method from command
+ * line and creates a Searcher instance based on this option. Reads search token
+ * from command line and fires the query to searcher.
+ * 
+ */
 public class Executor {
 
 	public static void main(String args[]) {
@@ -28,32 +34,34 @@ public class Executor {
 		try {
 			tokenString = br.readLine();
 			while (tokenString == null || tokenString.isEmpty()) {
-				System.out.println(" Token string cannot be empty. Enter a non-empty string:");
+				System.out
+						.println(" Token string cannot be empty. Enter a non-empty string:");
 				tokenString = br.readLine();
 			}
 			logger.info("User entered search token: " + tokenString);
-			System.out.println("Enter 1 for regex search or 2 for data-structure based search."
-					+ "\nEnter for default brute force search");
+			System.out
+					.println("Enter 1 for regex search or 2 for data-structure based search."
+							+ "\nEnter for default brute force search");
 			String userOption = br.readLine();
-			if (userOption.isEmpty()){
+			if (userOption.isEmpty()) {
 				option = 0;
-			}else {
+			} else {
 				option = Integer.parseInt(userOption);
 			}
 			Searcher searcher = null;
 			String methodType = null;
-			switch(option){
-			case 1:{
+			switch (option) {
+			case 1: {
 				methodType = SearchMethod.REGEX.toString();
 				logger.info("User wants to search using regex");
 				break;
 			}
-			case 2:{
+			case 2: {
 				methodType = SearchMethod.DATASTRUCTURE.toString();
 				logger.info("User wants to search using datastructure");
 				break;
 			}
-			default:{
+			default: {
 				methodType = SearchMethod.BRUTEFORCE.toString();
 				logger.info("User wants to search using brute force");
 			}
